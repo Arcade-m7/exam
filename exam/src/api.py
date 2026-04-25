@@ -4,17 +4,24 @@ from dataclasses import dataclass
 
 class Base:
     
-    def __init__(self,*args,**keys):
+    def __init__(self,path: str,*args: tuple, **keys: dict):
         self.Details = stat(*args,**keys)
+        self.path = path
+        self.sep = '/'.join(
+            list(
+                filter(
+                    lambda x : x,
+                    self.path.split('\\')
+                )
+            )
+        )
+        self.name = self.sep.split('/')[-1]
 
 class FileEntry(Base):
 
     def __init__(self, path: str):
         if not isfile(path):
             raise ValueError('path must be a file')
-        self.path = path
-        sep = '/'.join(self.path.split('\\'))
-        self.name = sep.split('/')[-1]
         self.extension = self.name.split('.')[-1] if '.' in self.name else None
         super().__init__(path)
 
@@ -26,16 +33,6 @@ class DirEntry(Base):
     def __init__(self, path: str):
         if not isdir(path):
             raise ValueError('path must be a dir')
-        self.path = path
-        sep = '/'.join(
-            list(
-                filter(
-                    lambda x : x or '',
-                    self.path.split('\\')
-                )
-            )
-        )
-        self.name = sep.split('/')[-1]
         super().__init__(path)
 
     def __repr__(self):
@@ -58,6 +55,9 @@ class PathEntry:
                         element.path
                     )
                 )
+        self.Both = self.Files + self.Dirs
 
     def __repr__(self):
-        return [elem.name for elem in self.Files + self.Dirs]
+        return str([elem.name for elem in self.Files + self.Dirs])
+    
+    
