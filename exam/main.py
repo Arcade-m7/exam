@@ -1,8 +1,5 @@
-from src import PathEntry, algorithmes
-from os import getcwd
+from utils import PathEntry, SearchEntry, algorithmes
+from os import getcwd,scandir
 
-class FileExplorer:
-
-    def ls(pwd:str = getcwd(), Sort: algorithmes = algorithmes.DONTSORT):
-        
-        return 
+for searchresult in SearchEntry.Search('c:/','*.txt'):
+    print(searchresult)
